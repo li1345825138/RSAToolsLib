@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="RSAToolsLib:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/RSAToolsLib_jar</output-path>
+    <root id="archive" name="RSAToolsLib.jar">
+      <element id="module-output" name="RSAToolsLib" />
+    </root>
+  </artifact>
+</component>
