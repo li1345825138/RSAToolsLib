@@ -25,13 +25,12 @@ import javax.crypto.NoSuchPaddingException;
  * @date 2023/4/24
  */
 public class RSADecrypter {
-    public enum KeyIdentify {PRIVATE_KEY, PUBLIC_KEY}
     private PrivateKey privateKey;
     private PublicKey publicKey;
 
     private Cipher cipher;
 
-    private KeyIdentify keyType;
+    private KeyType keyType;
 
     /**
      * Con-structor for RSA Decrypter
@@ -47,7 +46,7 @@ public class RSADecrypter {
      * @throws NoSuchPaddingException if transformation contains a padding scheme that is not
      * available.
      */
-    public RSADecrypter(String decryptKeyFilePath, KeyIdentify keyType) throws NoSuchAlgorithmException,
+    public RSADecrypter(String decryptKeyFilePath, KeyType keyType) throws NoSuchAlgorithmException,
             IOException, InvalidKeySpecException, NoSuchPaddingException {
         this.keyType = keyType;
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");

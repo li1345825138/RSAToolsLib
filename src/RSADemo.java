@@ -1,3 +1,4 @@
+import security.rsa.KeyType;
 import security.rsa.RSADecrypter;
 import security.rsa.RSAEncrypter;
 import security.rsa.RSAKeyGenerator;
@@ -16,25 +17,25 @@ public class RSADemo {
 
     static void testRSA1() throws Exception {
         // use private key to encrypt message
-        RSAEncrypter rsaEncrypter = new RSAEncrypter("private_key.key", RSAEncrypter.KeyIdentify.PRIVATE_KEY);
+        RSAEncrypter rsaEncrypter = new RSAEncrypter("private_key.key", KeyType.PRIVATE_KEY);
         String oriMsg = "Hello world";
         String encryptedMsg = rsaEncrypter.encryptContent(oriMsg);
         System.out.println("Encrypt: " + encryptedMsg);
 
         // use public key to decrypt message
-        RSADecrypter rsaDecrypter = new RSADecrypter("public_key.key", RSADecrypter.KeyIdentify.PUBLIC_KEY);
+        RSADecrypter rsaDecrypter = new RSADecrypter("public_key.key", KeyType.PUBLIC_KEY);
         System.out.println("Decrypt: " + rsaDecrypter.decryptContent(encryptedMsg));
     }
 
     static void testRSA2() throws Exception {
         // use public key to encrypt message
-        RSAEncrypter rsaEncrypter = new RSAEncrypter("public_key.key", RSAEncrypter.KeyIdentify.PUBLIC_KEY);
+        RSAEncrypter rsaEncrypter = new RSAEncrypter("public_key.key", KeyType.PUBLIC_KEY);
         String oriMsg = "Hello world";
         String encryptedMsg = rsaEncrypter.encryptContent(oriMsg);
         System.out.println("Encrypt: " + encryptedMsg);
 
         // use private key to decrypt message
-        RSADecrypter rsaDecrypter = new RSADecrypter("private_key.key", RSADecrypter.KeyIdentify.PRIVATE_KEY);
+        RSADecrypter rsaDecrypter = new RSADecrypter("private_key.key", KeyType.PRIVATE_KEY);
         System.out.println("Decrypt: " + rsaDecrypter.decryptContent(encryptedMsg));
     }
 }

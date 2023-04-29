@@ -28,12 +28,11 @@ import javax.crypto.NoSuchPaddingException;
  * @date 2023/4/24
  */
 public class RSAEncrypter {
-    public enum KeyIdentify {PRIVATE_KEY, PUBLIC_KEY}
     private PrivateKey privateKey;
     private PublicKey publicKey;
     private Cipher cipher;
 
-    private KeyIdentify keyType;
+    private KeyType keyType;
 
     /**
      * Con-structure
@@ -50,7 +49,7 @@ public class RSAEncrypter {
      * @throws NoSuchPaddingException if transformation contains a padding scheme that is not
      * available.
      */
-    public RSAEncrypter(String encryptKeyPath, KeyIdentify keyType) throws IOException,
+    public RSAEncrypter(String encryptKeyPath, KeyType keyType) throws IOException,
             NoSuchAlgorithmException, InvalidKeySpecException, NoSuchPaddingException {
         this.keyType = keyType;
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
