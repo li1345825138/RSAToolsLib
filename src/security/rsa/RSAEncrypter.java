@@ -102,7 +102,7 @@ public class RSAEncrypter {
      * Encrypt any original byte array content into encrypted byte array by using private key.
      *
      * @param originalMsg original byte array content
-     * @return encrypted byte array content
+     * @return encrypted byte array content with base64 encoded
      * @throws InvalidKeyException if the given key is inappropriate for initializing this
      * cipher, or its keysize exceeds the maximum allowable keysize (as determined from
      * theconfigured jurisdiction policy files).
@@ -120,6 +120,7 @@ public class RSAEncrypter {
             case PRIVATE_KEY -> this.cipher.init(Cipher.ENCRYPT_MODE, this.privateKey);
             case PUBLIC_KEY -> this.cipher.init(Cipher.ENCRYPT_MODE, this.publicKey);
         }
-        return this.cipher.doFinal(originalMsg);
+        byte[] encryptContent = this.cipher.doFinal(originalMsg);
+        return Base64.getEncoder().encode(encryptContent);
     }
 }

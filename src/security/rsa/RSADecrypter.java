@@ -110,10 +110,11 @@ public class RSADecrypter {
      */
     public byte[] decryptContent(byte[] encryptContent) throws InvalidKeyException,
             IllegalBlockSizeException, BadPaddingException {
+        byte[] b64DecodeContent = Base64.getDecoder().decode(encryptContent);
         switch (this.keyType) {
             case PRIVATE_KEY -> this.cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
             case PUBLIC_KEY -> this.cipher.init(Cipher.DECRYPT_MODE, this.publicKey);
         }
-        return this.cipher.doFinal(encryptContent);
+        return this.cipher.doFinal(b64DecodeContent);
     }
 }
