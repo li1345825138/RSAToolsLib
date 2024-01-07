@@ -5,20 +5,15 @@ import security.rsa.RSAKeyGenerator;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 public class RSADemo {
     public static void main(String[] args) throws Exception {
-        // generateKeyPair(2048);
+//         generateKeyPair(2048);
 //         textEncrypt();
-//         textDecrypt();
+         textDecrypt();
         // testRSA1();
         // testRSA2();
     }
@@ -30,13 +25,14 @@ public class RSADemo {
                 ) {
             byte[] content = new byte[344];
             Arrays.fill(content, (byte) 0);
-            StringBuilder sb = new StringBuilder();
             RSADecrypter decrypter = new RSADecrypter("private_key.key", KeyType.PRIVATE_KEY);
+            StringBuilder sb = new StringBuilder();
             while (bInput.read(content, 0, 344) != -1) {
                 byte[] dec_data = decrypter.decryptContent(content);
                 sb.append(new String(dec_data));
+                Arrays.fill(content, (byte) 0);
             }
-            System.out.printf(sb.toString());
+            System.out.println(sb);
         }
     }
 
@@ -45,17 +41,16 @@ public class RSADemo {
                 FileInputStream fInput = new FileInputStream("demo.txt");
                 BufferedInputStream bInput = new BufferedInputStream(fInput);
                 FileOutputStream fOutput = new FileOutputStream("demo_e.txt");
-                 BufferedOutputStream bOutput = new BufferedOutputStream(fOutput)
+                BufferedOutputStream bOutput = new BufferedOutputStream(fOutput)
                 ) {
             byte[] content = new byte[10];
             Arrays.fill(content, (byte) 0);
-            StringBuilder sb = new StringBuilder();
             RSAEncrypter cipher = new RSAEncrypter("public_key.key", KeyType.PUBLIC_KEY);
-            while (bInput.read(content, 0, 10) != -1) {
+            while (bInput.read(content) != -1) {
                 byte[] encrypt_data = cipher.encryptContent(content);
-                sb.append(new String(encrypt_data));
+                bOutput.write((new String(encrypt_data)).getBytes());
+                Arrays.fill(content, (byte) 0);
             }
-            bOutput.write(sb.toString().getBytes(StandardCharsets.UTF_8));
         }
     }
 

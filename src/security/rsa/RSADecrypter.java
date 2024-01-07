@@ -11,6 +11,7 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Arrays;
 import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -68,6 +69,24 @@ public class RSADecrypter {
     }
 
     /**
+     * This method is used to remove trailing null characters (0x00) from a byte array.
+     * It starts from the end of the array and moves backwards until it finds a non-null character.
+     * It then returns a new array that is a copy of the original array up to the last non-null character.
+     *
+     * @param content the byte array from which to remove trailing null characters
+     * @return a new byte array that is a copy of the original array up to the last non-null character
+     */
+    private byte[] trimEndNUL(byte[] content) {
+        int rIndex = content.length - 1;
+
+        // if the last index content is non-null character then there no change need.
+        if (content[rIndex] != 0) return content;
+
+        while (content[rIndex] == 0) rIndex--;
+        return Arrays.copyOf(content, rIndex + 1);
+    }
+
+    /**
      * Decrypt given base64 encode string content by using private key and return plain message.
      *
      * @param b64EncryptContent base64 encode string content from encrypt plain message
@@ -115,6 +134,7 @@ public class RSADecrypter {
             case PRIVATE_KEY -> this.cipher.init(Cipher.DECRYPT_MODE, this.privateKey);
             case PUBLIC_KEY -> this.cipher.init(Cipher.DECRYPT_MODE, this.publicKey);
         }
-        return this.cipher.doFinal(b64DecodeContent);
+        byte[] decryptContent = this.cipher.doFinal(b64DecodeContent);
+        return trimEndNUL(decryptContent);
     }
 }
