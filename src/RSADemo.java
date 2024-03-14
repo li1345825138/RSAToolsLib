@@ -4,32 +4,32 @@ import security.rsa.RSAEncrypter;
 import security.rsa.RSAKeyGenerator;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
 import java.util.Arrays;
 
 public class RSADemo {
+    private static int KEY_LENGTH = 2048;
     public static void main(String[] args) throws Exception {
-//         generateKeyPair(2048);
+//         generateKeyPair(KEY_LENGTH);
 //         textEncrypt();
-         textDecrypt();
-        // testRSA1();
-        // testRSA2();
+//         textDecrypt();
+//         testRSA1();
+//         testRSA2();
     }
 
     static void textDecrypt() throws Exception {
         try(
-                FileInputStream fInput = new FileInputStream("demo_e.txt");
-                BufferedInputStream bInput = new BufferedInputStream(fInput)
+                RandomAccessFile rInput = new RandomAccessFile("demo_e.txt", "r");
                 ) {
-            byte[] content = new byte[344];
+            int encryptSize = rInput.readInt();
+            byte[] content = new byte[encryptSize];
             Arrays.fill(content, (byte) 0);
             RSADecrypter decrypter = new RSADecrypter("private_key.key", KeyType.PRIVATE_KEY);
             StringBuilder sb = new StringBuilder();
-            while (bInput.read(content, 0, 344) != -1) {
-                byte[] dec_data = decrypter.decryptContent(content);
-                sb.append(new String(dec_data));
+            while (rInput.read(content, 0, encryptSize) != -1) {
+                byte[] dec_content = decrypter.decryptContent(content);
+                sb.append(new String(dec_content));
                 Arrays.fill(content, (byte) 0);
             }
             System.out.println(sb);
@@ -40,15 +40,24 @@ public class RSADemo {
         try(
                 FileInputStream fInput = new FileInputStream("demo.txt");
                 BufferedInputStream bInput = new BufferedInputStream(fInput);
-                FileOutputStream fOutput = new FileOutputStream("demo_e.txt");
-                BufferedOutputStream bOutput = new BufferedOutputStream(fOutput)
+                RandomAccessFile rOut = new RandomAccessFile("demo_e.txt", "rw");
                 ) {
+            rOut.setLength(0L);
             byte[] content = new byte[10];
             Arrays.fill(content, (byte) 0);
+            if (bInput.read(content) == -1) return;
             RSAEncrypter cipher = new RSAEncrypter("public_key.key", KeyType.PUBLIC_KEY);
-            while (bInput.read(content) != -1) {
-                byte[] encrypt_data = cipher.encryptContent(content);
-                bOutput.write((new String(encrypt_data)).getBytes());
+
+            // run this for write out length of base64 encrypt string and first string content
+            byte[] encrypt_data = cipher.encryptContent(content);
+            rOut.writeInt(encrypt_data.length);
+            rOut.write((new String(encrypt_data)).getBytes());
+            Arrays.fill(content, (byte) 0);
+
+            // do the rest
+            while (bInput.read(content, 0, 10) != -1) {
+                encrypt_data = cipher.encryptContent(content);
+                rOut.write((new String(encrypt_data)).getBytes());
                 Arrays.fill(content, (byte) 0);
             }
         }
